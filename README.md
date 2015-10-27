@@ -3,7 +3,7 @@
 # Instructions for use:
 This is an SBT autoplugin so all you have to do is add the following to your `project/plugins.sbt`:
 ```
-addSbtPlugin("com.intenthq.sbt" % "sbt-thrift-plugin" % "1.0.1")
+addSbtPlugin("com.intenthq.sbt" % "sbt-thrift-plugin" % "1.0.2")
 ```
 
 ## Settings
