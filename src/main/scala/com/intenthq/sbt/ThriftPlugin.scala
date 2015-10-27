@@ -110,6 +110,9 @@ object ThriftPlugin extends AutoPlugin {
         compileThrift(tsd, tod, t, "delphi", to, s.log, s.cacheDirectory / "thrift-delphi") }
       else
         Seq()
+    },
+    managedClasspath <<= (classpathTypes, update) map { (cpt, up) =>
+      Classpaths.managedJars(Thrift, cpt, up)
     }
   )) ++ Seq[Setting[_]](
     watchSources <++= thriftSourceDir.map { ( tdir ) => ( tdir ** "*" ).get },
