@@ -81,7 +81,6 @@ object ThriftPlugin extends AutoPlugin {
     thriftGenerateJs <<= (thriftJsEnabled, thriftSourceDir, thriftJsOutputDir, thrift, thriftJsOptions, streams).map { (te, tsd, tod, t, to, s) =>
       if (te) {
         compileThrift(tsd, tod, t, "js", to, s.log, s.cacheDirectory / "thrift-js") }
-      else
         Seq()
     },
     thriftRubyEnabled := false,
@@ -89,7 +88,9 @@ object ThriftPlugin extends AutoPlugin {
     thriftRubyOutputDir := file("target/gen-ruby"),
     thriftGenerateRuby <<= (thriftRubyEnabled, thriftSourceDir, thriftRubyOutputDir, thrift, thriftRubyOptions, streams).map { (te, tsd, tod, t, to, s) =>
       if (te) {
-        compileThrift(tsd, tod, t, "rb", to, s.log, s.cacheDirectory / "thrift-rb") }
+        compileThrift(tsd, tod, t, "rb", to, s.log, s.cacheDirectory / "thrift-rb")
+        Seq()
+      }
       else
         Seq()
     },
@@ -98,7 +99,9 @@ object ThriftPlugin extends AutoPlugin {
     thriftPythonOutputDir := file("target/gen-python"),
     thriftGeneratePython <<= (thriftPythonEnabled, thriftSourceDir, thriftPythonOutputDir, thrift, thriftPythonOptions, streams).map { (te, tsd, tod, t, to, s) =>
       if (te) {
-        compileThrift(tsd, tod, t, "py", to, s.log, s.cacheDirectory / "thrift-py") }
+        compileThrift(tsd, tod, t, "py", to, s.log, s.cacheDirectory / "thrift-py")
+        Seq()
+      }
       else
         Seq()
     },
@@ -107,7 +110,9 @@ object ThriftPlugin extends AutoPlugin {
     thriftDelphiOutputDir := file("target/gen-delphi"),
     thriftGenerateDelphi <<= (thriftDelphiEnabled, thriftSourceDir, thriftDelphiOutputDir, thrift, thriftDelphiOptions, streams).map { (te, tsd, tod, t, to, s) =>
       if (te) {
-        compileThrift(tsd, tod, t, "delphi", to, s.log, s.cacheDirectory / "thrift-delphi") }
+        compileThrift(tsd, tod, t, "delphi", to, s.log, s.cacheDirectory / "thrift-delphi")
+        Seq()
+      }
       else
         Seq()
     },
