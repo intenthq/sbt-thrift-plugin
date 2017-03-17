@@ -4,7 +4,7 @@ organization := "com.intenthq.sbt"
 
 name := "sbt-thrift-plugin"
 
-version := "1.0.4"
+version := "1.0.5"
 
 scalaVersion := "2.10.5"
 
