@@ -67,7 +67,7 @@ object ThriftPlugin extends AutoPlugin {
     thrift := "thrift",
     thriftSourceDir <<= sourceDirectory { _ / "main" / "thrift" },
     thriftJavaEnabled := true,
-    thriftJavaOptions := Seq("hashcode"),
+    thriftJavaOptions := Seq(),
     thriftOutputDir <<= sourceManaged { _ / "main" },
     thriftGenerateJava <<= (thriftJavaEnabled, thriftSourceDir, thriftOutputDir, thrift, thriftJavaOptions, streams).map { (te, tsd, tod, t, to, s) =>
       if (te) {
