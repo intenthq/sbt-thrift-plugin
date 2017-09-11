@@ -1,4 +1,4 @@
-# SBT Thrift Plugin
+# SBT Thrift Plugin [![Build Status](https://travis-ci.org/intenthq/sbt-thrift-plugin.svg?branch=master)](https://travis-ci.org/intenthq/sbt-thrift-plugin)
 
 **A Thrift plugin for compiling Thrift sources into Java and adding the generated classes into the compile scope automagically.**
 
