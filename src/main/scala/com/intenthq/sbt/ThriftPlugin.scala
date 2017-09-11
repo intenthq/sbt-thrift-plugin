@@ -4,6 +4,7 @@ import sbt._
 import Keys._
 
 import java.io.File
+import scala.sys.process._
 
 object ThriftPlugin extends AutoPlugin {
 
@@ -58,77 +59,92 @@ object ThriftPlugin extends AutoPlugin {
   import autoImport._
 
   override def requires = sbt.plugins.JvmPlugin
-
   override def trigger = allRequirements
 
   val Thrift = config("thrift")
 
   val thriftSettings: Seq[Setting[_]] = inConfig(Thrift)(Seq(
     thrift := "thrift",
-    thriftSourceDir <<= sourceDirectory { _ / "main" / "thrift" },
+    thriftSourceDir := { sourceDirectory.value / "main" / "thrift" },
     thriftJavaEnabled := true,
     thriftJavaOptions := Seq(),
-    thriftOutputDir <<= sourceManaged { _ / "main" },
-    thriftGenerateJava <<= (thriftJavaEnabled, thriftSourceDir, thriftOutputDir, thrift, thriftJavaOptions, streams).map { (te, tsd, tod, t, to, s) =>
-      if (te) {
-        compileThrift(tsd, tod, t, "java", to, s.log, s.cacheDirectory / "thrift-java") }
+    thriftOutputDir := { sourceManaged.value / "main" },
+    thriftGenerateJava := (Def.taskDyn {
+      if (thriftJavaEnabled.value)
+        Def.task {
+          compileThrift(thriftSourceDir.value, thriftOutputDir.value, thrift.value, "java", thriftJavaOptions.value, streams.value.log, streams.value.cacheDirectory / "thrift-java")
+        }
       else
-        Seq()
-    },
+        Def.task {
+          Seq.empty[File]
+        }
+    }).value,
     thriftJsEnabled := false,
     thriftJsOptions := Seq(),
     thriftJsOutputDir := file("target/gen-js"),
-    thriftGenerateJs <<= (thriftJsEnabled, thriftSourceDir, thriftJsOutputDir, thrift, thriftJsOptions, streams).map { (te, tsd, tod, t, to, s) =>
-      if (te) {
-        compileThrift(tsd, tod, t, "js", to, s.log, s.cacheDirectory / "thrift-js") }
-        Seq()
-    },
+    thriftGenerateJs := (Def.taskDyn {
+      if (thriftJsEnabled.value)
+        Def.task {
+          compileThrift(thriftSourceDir.value, thriftJsOutputDir.value, thrift.value, "js", thriftJsOptions.value, streams.value.log, streams.value.cacheDirectory / "thrift-js")
+          Seq.empty[File]
+        }
+      else
+        Def.task {
+          Seq.empty[File]
+        }
+    }).value,
     thriftRubyEnabled := false,
     thriftRubyOptions := Seq(),
     thriftRubyOutputDir := file("target/gen-ruby"),
-    thriftGenerateRuby <<= (thriftRubyEnabled, thriftSourceDir, thriftRubyOutputDir, thrift, thriftRubyOptions, streams).map { (te, tsd, tod, t, to, s) =>
-      if (te) {
-        compileThrift(tsd, tod, t, "rb", to, s.log, s.cacheDirectory / "thrift-rb")
-        Seq()
-      }
+    thriftGenerateRuby := (Def.taskDyn {
+      if (thriftRubyEnabled.value)
+        Def.task {
+          compileThrift(thriftSourceDir.value, thriftRubyOutputDir.value, thrift.value, "rb", thriftRubyOptions.value, streams.value.log, streams.value.cacheDirectory / "thrift-rb")
+          Seq.empty[File]
+        }
       else
-        Seq()
-    },
+        Def.task {
+          Seq.empty[File]
+        }
+    }).value,
     thriftPythonEnabled := false,
     thriftPythonOptions := Seq(),
     thriftPythonOutputDir := file("target/gen-python"),
-    thriftGeneratePython <<= (thriftPythonEnabled, thriftSourceDir, thriftPythonOutputDir, thrift, thriftPythonOptions, streams).map { (te, tsd, tod, t, to, s) =>
-      if (te) {
-        compileThrift(tsd, tod, t, "py", to, s.log, s.cacheDirectory / "thrift-py")
-        Seq()
-      }
+    thriftGeneratePython := (Def.taskDyn {
+      if (thriftPythonEnabled.value)
+        Def.task {
+          compileThrift(thriftSourceDir.value, thriftPythonOutputDir.value, thrift.value, "py", thriftPythonOptions.value, streams.value.log, streams.value.cacheDirectory / "thrift-py")
+          Seq.empty[File]
+        }
       else
-        Seq()
-    },
+        Def.task {
+          Seq.empty[File]
+        }
+    }).value,
     thriftDelphiEnabled := false,
     thriftDelphiOptions := Seq(),
     thriftDelphiOutputDir := file("target/gen-delphi"),
-    thriftGenerateDelphi <<= (thriftDelphiEnabled, thriftSourceDir, thriftDelphiOutputDir, thrift, thriftDelphiOptions, streams).map { (te, tsd, tod, t, to, s) =>
-      if (te) {
-        compileThrift(tsd, tod, t, "delphi", to, s.log, s.cacheDirectory / "thrift-delphi")
-        Seq()
-      }
+    thriftGenerateDelphi := (Def.taskDyn {
+      if (thriftDelphiEnabled.value)
+        Def.task {
+          compileThrift(thriftSourceDir.value, thriftDelphiOutputDir.value, thrift.value, "delpi", thriftDelphiOptions.value, streams.value.log, streams.value.cacheDirectory / "thrift-delphi")
+          Seq.empty[File]
+        }
       else
-        Seq()
-    },
-    managedClasspath <<= (classpathTypes, update) map { (cpt, up) =>
-      Classpaths.managedJars(Thrift, cpt, up)
-    }
+        Def.task {
+          Seq.empty[File]
+        }
+    }).value,
+    managedClasspath := Classpaths.managedJars(Thrift, classpathTypes.value, update.value)
   )) ++ Seq[Setting[_]](
-    watchSources <++= thriftSourceDir.map { ( tdir ) => ( tdir ** "*" ).get },
-    sourceGenerators in Compile <+= thriftGenerateJava in Thrift,
-    sourceGenerators in Compile <+= thriftGenerateJs in Thrift,
-    sourceGenerators in Compile <+= thriftGenerateRuby in Thrift,
-    sourceGenerators in Compile <+= thriftGeneratePython in Thrift,
-    sourceGenerators in Compile <+= thriftGenerateDelphi in Thrift,
+    watchSources ++= { (thriftSourceDir.value ** "*").get },
+    sourceGenerators in Compile += (thriftGenerateJava in Thrift).taskValue,
+    sourceGenerators in Compile += (thriftGenerateJs in Thrift).taskValue,
+    sourceGenerators in Compile += (thriftGenerateRuby in Thrift).taskValue,
+    sourceGenerators in Compile += (thriftGeneratePython in Thrift).taskValue,
+    sourceGenerators in Compile += (thriftGenerateDelphi in Thrift).taskValue,
     ivyConfigurations += Thrift
   )
 
   override lazy val projectSettings = thriftSettings
-
 }

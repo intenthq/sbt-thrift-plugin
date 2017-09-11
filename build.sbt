@@ -1,13 +1,8 @@
 sbtPlugin := true
-
 organization := "com.intenthq.sbt"
-
 name := "sbt-thrift-plugin"
-
-version := "1.0.5"
-
-scalaVersion := "2.10.5"
-
+version := "1.1.0"
+scalaVersion := "2.12.3"
 scalacOptions ++= Seq("-deprecation", "-feature")
 
 publishTo := {
