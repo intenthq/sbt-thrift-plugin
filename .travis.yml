@@ -1,16 +1,23 @@
 language: scala
+scala:
+   - 2.12.8
+env:
+  # Test Thrift 0.9.3 for compatability with Spark.
+  - THRIFT_VERSION=0.9.3
+  - THRIFT_VERSION=0.10.0
+  - THRIFT_VERSION=0.11.0
+  - THRIFT_VERSION=0.12.0
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install libboost-dev libboost-test-dev libboost-program-options-dev libevent-dev automake libtool flex bison pkg-config g++ libssl-dev
-  - wget http://www.us.apache.org/dist/thrift/0.10.0/thrift-0.10.0.tar.gz
-  - tar xfz thrift-0.10.0.tar.gz && mv thrift-0.10.0 .thrift-0.10.0
-  - cd .thrift-0.10.0 && ./configure --with-java --without-c_glib --without-cpp --without-csharp --without-python --without-ruby --without-haskell --without-perl --without-php --without-erlang --without-go --without-d --without-nodejs --without-lua && make && sudo make install && cd -
-scala:
-   - 2.12.3
+  - wget http://www.us.apache.org/dist/thrift/$THRIFT_VERSION/thrift-$THRIFT_VERSION.tar.gz
+  - tar xfz thrift-$THRIFT_VERSION.tar.gz && mv thrift-$THRIFT_VERSION .thrift-$THRIFT_VERSION
+  - cd .thrift-$THRIFT_VERSION && ./configure --with-java --without-c_glib --without-cpp --without-csharp --without-python --without-ruby --without-haskell --without-perl --without-php --without-erlang --without-go --without-d --without-nodejs --without-lua && make && sudo make install && cd -
 script:
   - sbt compile
+  - sbt scripted
 cache:
   directories:
-   - ~/.thrift-0.10.0
+   - ~/.thrift-$THRIFT_VERSION
    - ~/.ivy2
    - ~/.sbt

@@ -13,7 +13,7 @@ These aren't supported as sources by SBT but will be available in a `target/gen-
 
 By default, the plugin will compile to Java only. See the settings section below for details on how to enable other languages.
 
-## Instructions
+## Usage
 
 This is an SBT auto-plugin so all you have to do is add the following to your `project/plugins.sbt`:
 
@@ -21,7 +21,16 @@ This is an SBT auto-plugin so all you have to do is add the following to your `p
 addSbtPlugin("com.intenthq.sbt" % "sbt-thrift-plugin" % "1.1.0")
 ```
 
-> *Note:* SBT `0.13.x` and earlier users should use `1.0.5` which is the last release compatible with these versions of SBT. SBT `1.x` is the supported version of SBT from `1.1.0` onwards.
+> *Note:* SBT `0.13.x` and earlier users should use `1.0.5` which is the last release compatible with these versions of SBT. Only SBT `1.x` is supported from `1.1.0` onwards.
+
+### Installing Thrift
+
+This plugin depends on having the `thrift` binary in your `PATH` — it does not add any speciifc dependency on `libthrift` for you. This means you should:
+
+* Make sure the correct version of `thrift` you need is installed on your system and in your `PATH`.
+* Make sure you add a dependency on the correct version of `libthrift` to the application.
+
+We have automated tests for this plugin running using the latest Thrift version (currently `0.12.0`) and `0.9.x` (used by the Spark ecosystem).
 
 ## Settings
 

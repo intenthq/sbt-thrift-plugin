@@ -1,0 +1,4 @@
+# check if the file gets created
+> compile
+$ exists target/scala-2.12/src_managed/main/com/intenthq/sbt/thrift/SomeEnum.java
+$ exists target/scala-2.12/src_managed/main/com/intenthq/sbt/thrift/SomeStruct.java
