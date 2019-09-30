@@ -127,7 +127,7 @@ object ThriftPlugin extends AutoPlugin {
     thriftGenerateDelphi := (Def.taskDyn {
       if (thriftDelphiEnabled.value)
         Def.task {
-          compileThrift(thriftSourceDir.value, thriftDelphiOutputDir.value, thrift.value, "delpi", thriftDelphiOptions.value, streams.value.log, streams.value.cacheDirectory / "thrift-delphi")
+          compileThrift(thriftSourceDir.value, thriftDelphiOutputDir.value, thrift.value, "delphi", thriftDelphiOptions.value, streams.value.log, streams.value.cacheDirectory / "thrift-delphi")
           Seq.empty[File]
         }
       else
